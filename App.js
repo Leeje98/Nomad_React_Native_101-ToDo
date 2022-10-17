@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Pressable,
   TextInput,
+  ScrollView,
 } from "react-native";
 // TouchableOpacity : 누르는 순간 투명하게 애니메이션을 준다 - 투명도 조절 가능
 // TouchableHighlight : 누르는 순간 옵션을 이용하여 애니메이션을 다양하게 줄 수 있다
@@ -27,12 +28,16 @@ export default function App() {
     if (text === "") {
       return; // 비어있다면 아무것도 하지않고 반환
     }
-    const newToDos = Object.assign(  // Object.assign : 객체를 합치는 기능
-      {},   // 비어있는 오브젝트(기준)
-      toDos, {  // 기존 객체
-      [Date.now()]: { text, work: working },  // 새로운 객체
-      // [Date.now()]:key | text: value | work: working : 할일인지 여행인지 카테고리구분 
-    });
+    // const newToDos = Object.assign(  // Object.assign : 객체를 합치는 기능
+    //   {},   // 비어있는 오브젝트(기준)
+    //   toDos, {  // 기존 객체
+    //   [Date.now()]: { text, work: working },  // 새로운 객체
+    //   // [Date.now()]:key | text: value | work: working : 할일인지 여행인지 카테고리구분
+    // });       // 첫번째 - Object.assign를 사용해서 객체를 추가하는 방법
+    const newToDos = {
+      ...toDos,
+      [Date.now()]: { text, work: working },
+    }; // 두번째 - 스프레드 연산자를 이용해서 객체를 추가하는 방법
     setToDos(newToDos);
     setText(""); // 인풋란 비워주기
   };
@@ -72,6 +77,13 @@ export default function App() {
         placeholder={working ? "Add a To Do" : "Where do you want to go?"}
         style={styles.input}
       />
+      <ScrollView>
+        {Object.keys(toDos).map((key) => (
+          <View style={styles.toDo} key={key}>
+            <Text style={styles.toDoText}>{toDos[key].text}</Text>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -96,6 +108,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10, // 패딩 수직
     paddingHorizontal: 20, //  패딩 가로
     borderRadius: 30,
+    marginVertical: 20,
     fontSize: 18,
+  },
+  toDo: {
+    backgroundColor: theme.grey,
+    marginBottom: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  toDoText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
