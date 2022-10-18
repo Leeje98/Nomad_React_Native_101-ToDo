@@ -33,9 +33,9 @@ export default function App() {
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload); // 페이로드는 전송되는 데이터 자체를 지칭 / JSON형태
-  const saveToDos = async (toSave) => {
+  const saveToDos = async (toSave) => {                                                                                                  // 
     // 현재 존재하는 toDos를 string으로 변환 // toDos를 toSave라는 형태로 받겠다
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toDos)); // JSON.stringify() 사용하여 오브젝트를 스트링으로 변환한다
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave)); // JSON.stringify() 사용하여 오브젝트를 스트링으로 변환한다
   }; // key, value
   const loadToDos = async () => {
     try {
@@ -45,7 +45,7 @@ export default function App() {
       setToDos(JSON.parse(s));
     } catch (e) {
       // saving error
-      <Text>error</Text>;
+      console.error('error')
     }
   };
 
@@ -70,15 +70,14 @@ export default function App() {
 
   const deleteToDo = (key) => {
     Alert.alert("Delete To Do", "Are you sure?", [
-      { text: "Cancel" },
+      { text: "취소" },
       {
-        text: "I'm Sure",
-        style: "destructive",
-        onPress: () => {
+        text: "확인",
+        onPress: async () => {
           const newToDos = { ...toDos };
           delete newToDos[key];
           setToDos(newToDos);
-          saveToDos(newToDos);
+          await saveToDos(newToDos);
         },
       },
     ]);
